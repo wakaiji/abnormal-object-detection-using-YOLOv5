@@ -1,0 +1,165 @@
+<!doctype html>
+<html>
+    <head>
+        <title>XDetection</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+        <link href="/static/css/style.css" rel='stylesheet' type='text/css' />
+        <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"></script>
+
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+        <script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
+        <script src="https://unpkg.com/markerjs2/markerjs2.js"></script>
+
+        <!-- Custom Theme files -->
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
+</script>
+<!---- start-smoth-scrolling---->
+<script type="text/javascript" src="/static/js/move-top.js"></script>
+<script type="text/javascript" src="/static/js/easing.js"></script>
+<script type="text/javascript">
+	jQuery(document).ready(function($) {
+		$(".scroll").click(function(event){		
+			event.preventDefault();
+			$('html,body').animate({scrollTop:$(this.hash).offset().top},1000);
+		});
+	});
+</script>
+<!---- start-smoth-scrolling---->
+<!----webfonts--->
+<link href='http://fonts.googleapis.com/css?family=Oswald:400,300,700' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700,800' rel='stylesheet' type='text/css'>
+<!---//webfonts--->
+<!----start-top-nav-script---->
+<script>
+	$(function() {
+		var pull 		= $('#pull');
+		menu 		= $('nav ul');
+		menuHeight	= menu.height();
+		$(pull).on('click', function(e) {
+			e.preventDefault();
+			menu.slideToggle();
+		});
+		$(window).resize(function(){
+			var w = $(window).width();
+			if(w > 320 && menu.is(':hidden')) {
+				menu.removeAttr('style');
+			}
+		});
+	});
+</script>
+<!----//End-top-nav-script---->
+
+        <script>
+            function showMarketArea(target){
+                const markerArea = new markerjs2.MarkerArea(target);
+                markerArea.addRenderEventListener((imgURL) => target.src = imgURL);
+                markerArea.show();
+            }
+        </script>
+
+    </head>
+    <body style="background: #d3d3d3;">
+        <!----- start-header---->
+        <div id="home" class="header">
+            <div class="top-header">
+                <div class="container">
+                    <div class="logo">
+                        <a href="{{ url_for('home') }}">XDetection<br></a>
+                    </div>
+                    <!----start-top-nav---->
+                    <nav class="top-nav">
+                        <ul class="top-nav">
+                            <li><a href="{{ url_for('home') }}">Home</a></li>
+                        </ul>
+                        <a href="#" id="pull"><img src="static/images/menu-icon.png" title="menu" /></a>
+                    </nav>
+                    <div class="clearfix"> </div>
+                </div>
+            </div>
+        </div>
+        <!----- //End-header---->
+        <div class="container">
+            <div class="box-result m-3">
+                <div class="row m-5">
+                    <div class="col-6">
+                        <h6 class="text-center">Gambar Asli</h6>
+                        <div class="d-flex justify-content-center">
+                            <a class="d-flex justify-content-center" data-fancybox="gallery" href="../static/picture/{{ original_image }}" data-lightbox="example-set">
+                                <img src="../static/picture/{{ original_image }}" width="60%">
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <h6 class="text-center">Gambar yang dideteksi</h6>
+                        <div class="d-flex justify-content-center">
+                            <a class="d-flex justify-content-center" data-fancybox="gallery" href="../static/detect/{{ detected_image }}" data-lightbox="example-set">
+                                <img src="../static/detect/{{ detected_image }}" width="60%">
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {% if object_detected != [] %}
+                <div class="d-flex justify-content-center">
+                    <table class="mx-5 table table-bordered">
+                    <thead class="table-light">
+                        <th>Nama Objek</th>
+                        <th>Skor</th>
+                    </thead>
+                    {% for x in object_detected %}
+                        <tr>
+                            <td>{{ x[0] }}</td>
+                            <td>{{ x[1] }}%</td>
+                        </tr>
+                    {% endfor %}
+                    </table>
+                </div>
+                {% else %}
+                <div class="border border-danger bg-danger m-detected">
+                    <h5 class="text-center font-white" style="color:white;">No object detected.</h5>
+                </div>
+                {% endif %}
+            </div>
+            <div id="loader-wrapper">
+                <div id="loader"></div>
+
+                <div class="loader-section section-left"></div>
+                <div class="loader-section section-right"></div>
+
+            </div>
+        </div>
+
+        <!--- copy-right ---->
+			<div class="copy-right">
+				<div class="container">
+					<div class="copy-right-left">
+						<p>XDetection by abnormal</a></p>
+						<script type="text/javascript">
+							$(document).ready(function() {
+										/*
+										var defaults = {
+								  			containerID: 'toTop', // fading element id
+											containerHoverID: 'toTopHover', // fading element hover id
+											scrollSpeed: 1200,
+											easingType: 'linear' 
+								 		};
+								 		*/
+								 		
+								 		$().UItoTop({ easingType: 'easeOutQuart' });
+								 		
+								 	});
+								 </script>
+								 <a href="#" id="toTop" style="display: block;"> <span id="toTopHover" style="opacity: 1;"> </span></a>
+								</div>
+								<div class="clearfix"> </div>
+							</div>
+						</div>
+						<!--- copy-right ---->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="../static/js/main.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.min.js" integrity="sha384-Atwg2Pkwv9vp0ygtn1JAojH0nYbwNJLPhwyoVbhoPwBhjQPR5VtM2+xf0Uwh9KtT" crossorigin="anonymous"></script>
+
+    </body>
+</html>
